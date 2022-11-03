@@ -20,7 +20,7 @@ if (cluster.isWorker) {
   });
   setupWorker(io);
 }
-  
+
 io.on('connection', (socket) => {
   socket.on('join-room', (data) => {
     socket.broadcast.emit('hello', data);
