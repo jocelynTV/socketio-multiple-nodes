@@ -25,6 +25,9 @@ io.on('connection', (socket) => {
   socket.on('join-room', (data) => {
     socket.broadcast.emit('hello', data);
   });
+  socket.on('chat-message', (data) => {
+    socket.broadcast.emit('send-message', data);
+  });
 });
 
 httpServer.listen(3000, () => console.log('App running port 3000'));

@@ -1,41 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.css">
-    <title>Socket IO với cluster mode</title>
-  </head>
-  <body>
-    <div class="relative overflow-hidden bg-white">
-      <div class="mx-auto max-w-7xl">
-        <div class="relative z-10 bg-white pb-8 sm:pb-16 md:pb-20 lg:w-full lg:max-w-2xl lg:pb-28 xl:pb-32">
-          <main class="mx-auto mt-10 max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-            <div class="sm:text-center lg:text-left">
-              <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
-                <span class="block xl:inline">Socket IO với cluster mode</span>
-              </h1>
-              <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
-                <div class="rounded-md shadow">
-                  <a href="#" class="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 md:py-4 md:px-10 md:text-lg" onclick="joinRoom()">Join room</a>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.css">
+  <title>Realtime Chat Using Socket IO Cluster Mode</title>
+</head>
+
+<body>
+  <div class="relative overflow-hidden bg-white">
+    <div class="mx-auto max-w-7xl">
+      <div class="relative z-10 bg-white pb-8 sm:pb-16 md:pb-20 lg:w-full lg:max-w-2xl lg:pb-28 xl:pb-32">
+        <main class="mx-auto mt-10 max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
+          <div class="sm:text-center lg:text-left">
+            <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-3xl md:text-4xl">
+              <span class="block xl:inline">Realtime Chat Using Socket IO Cluster Mode</span>
+            </h1>
+            <!-- component -->
+            <div class="flex-1 p:2 sm:p-6 justify-between flex flex-col h-screen">
+              <div id="messages"
+                class="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
+                <div id="boxmessages">
+
+                </div>
+                <div class="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
+                  <div class="relative flex">
+                    <input onkeydown="chat(this)" type="text" placeholder="Write your message!"
+                      class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-12 bg-gray-200 rounded-md py-3">
+                  </div>
                 </div>
               </div>
+
+              <style>
+                .chat-message {
+                  margin-top: 12px;
+                }
+
+                .scrollbar-w-2::-webkit-scrollbar {
+                  width: 0.25rem;
+                  height: 0.25rem;
+                }
+
+                .scrollbar-track-blue-lighter::-webkit-scrollbar-track {
+                  --bg-opacity: 1;
+                  background-color: #f7fafc;
+                  background-color: rgba(247, 250, 252, var(--bg-opacity));
+                }
+
+                .scrollbar-thumb-blue::-webkit-scrollbar-thumb {
+                  --bg-opacity: 1;
+                  background-color: #edf2f7;
+                  background-color: rgba(237, 242, 247, var(--bg-opacity));
+                }
+
+                .scrollbar-thumb-rounded::-webkit-scrollbar-thumb {
+                  border-radius: 0.25rem;
+                }
+              </style>
+
+              <script>
+                const el = document.getElementById('messages')
+                el.scrollTop = el.scrollHeight
+              </script>
+
             </div>
-          </main>
-        </div>
+        </main>
       </div>
     </div>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.socket.io/4.5.3/socket.io.min.js" integrity="sha384-WPFUvHkB1aHA5TDSZi6xtDgkF0wXJcIIxXhC6h8OT8EH3fC5PWro5pWJ1THjcfEi" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
-    <script>
-      const socket = io('', { transports: ['websocket'] });
-      
-      socket.on('connect', () => {
-        socket.on('hello', (arg) => {
-          $.toast({
+  </div>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.socket.io/4.5.3/socket.io.min.js"
+    integrity="sha384-WPFUvHkB1aHA5TDSZi6xtDgkF0wXJcIIxXhC6h8OT8EH3fC5PWro5pWJ1THjcfEi"
+    crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
+  <script>
+    const socket = io('', { transports: ['websocket'] });
+
+    socket.on('connect', () => {
+      socket.on('hello', (arg) => {
+        $.toast({
           heading: 'Notification',
           text: arg,
           icon: 'info',
@@ -43,22 +89,38 @@
           loader: true,
           loaderBg: '#9EC600'
         });
-        });
       });
-      function joinRoom() {
-        $.toast({
-          heading: 'Information',
-          text: 'Join room successful',
-          icon: 'info',
-          position: 'top-center',
-          loader: true,
-          loaderBg: '#9EC600'
-        });
-        socket.emit('join-room', `ID: ${socket.id} joined`);
+      socket.on('send-message', (data) => {
+        const boxmessages = document.getElementById('boxmessages');
+        boxmessages.innerHTML += "<div class='chat-message'><div class='flex items-end'><div class='flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start'><div><span class='px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600'>" + data + "</span></div><span>Guest</span></div></div>";
+      });
+      joinRoom()
+    });
+    function joinRoom() {
+      $.toast({
+        heading: 'Information',
+        text: 'Join room successful',
+        icon: 'info',
+        position: 'top-center',
+        loader: true,
+        loaderBg: '#9EC600'
+      });
+      socket.emit('join-room', `ID: ${socket.id} joined`);
+    }
+    socket.on('disconnect', () => {
+      console.log(socket.id);
+    });
+
+    function chat(ele) {
+      if (event.key === 'Enter') {
+        const boxmessages = document.getElementById('boxmessages');
+        socket.emit('chat-message', ele.value);
+        boxmessages.innerHTML += "<div class='chat-message'><div class='flex items-end justify-end'><div class='flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end'><div><span class='px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white '>" + ele.value + "</span></div><span>You</span></div></div></div>";
+        ele.value = "";
       }
-      socket.on('disconnect', () => {
-        console.log(socket.id);
-      });
-    </script> 
-  </body>
+    }
+
+  </script>
+</body>
+
 </html>
