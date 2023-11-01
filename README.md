@@ -1,14 +1,14 @@
-# Socket IO với cluster mode
+# Realtime Chat Using Socket IO Cluster Mode
 
-Cách tích hợp và sử dụng socket.io cùng với Node.js sử dụng pm2 với nhiều cluster.
+## Requirements
 
-## Yêu cầu
+<img src="https://img.shields.io/badge/Node.js-%3E=20.0.0-blue?logo=nodedotjs&logoColor=339933" />
+<img src="https://img.shields.io/badge/Yarn-%3E=3.0.0-blue?logo=yarn&logoColor=2C8EBB" />
+<img src="https://img.shields.io/badge/Redis-black?logo=redis&logoColor=DC382D" />
+<img src="https://img.shields.io/badge/PM2-black?logo=pm2&logoColor=2B037A" />
 
-- Node.js 16 hoặc cao hơn, Typescript, Yarn, PM2
 
-## Cách sử dụng
-
-Thực hiện các lệnh bên dưới:
+## Usage
 
 ```bash
 yarn install
